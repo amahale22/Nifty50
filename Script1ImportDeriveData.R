@@ -6,6 +6,7 @@ str(stock)
 
 # Remove traded volume column and change date to Posixct format for ease
 stockTemp<-stock[,c(-6,-7)]
+
 stockTemp$DateNew<-as.POSIXct(stockTemp$Date,format="%d-%b-%Y")
 
 
