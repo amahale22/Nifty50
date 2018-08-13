@@ -31,9 +31,29 @@ stockTemp$logReturns <- c(0, diff(log(stockTemp$Close), lag = 1))
 
 head(stockTemp)
 
-ggplot(data=stockTemp,aes(x=DateNew,y=Close))+
+#To plot Line graoh of current close index wrt date 
+a<-ggplot(data=stockTemp,aes(x=DateNew,y=Close))+
   geom_line(color="blue")+
   scale_x_datetime(date_breaks = "5 day",date_labels = format("%b %d"))+
-  labs(title="Nifty direction for 1 month",x="Date",y="Index")+
+  labs(title=paste("Nifty Index from ",stockTemp$DateNew[1]," to ",stockTemp$DateNew[n]),x="Date",y="Index")+
   theme_classic()
+
+#To plot returns and log returns as function of time 
+b<-ggplot(data=stockTemp,aes(x=DateNew,y=Sreturn))+
+  geom_line(color="blue")+
+  scale_x_datetime(date_breaks = "5 day",date_labels = format("%b %d"))+
+  labs(title=paste("Nifty returns from ",stockTemp$DateNew[1]," to ",stockTemp$DateNew[n]),x="Date",y="Returns")+
+  theme_classic()
+
+c<-ggplot(data=stockTemp,aes(x=DateNew,y=logReturns))+
+  geom_line(color="red")+
+  scale_x_datetime(date_breaks = "5 day",date_labels = format("%b %d"))+
+  labs(title=paste("Nifty log returns from ",stockTemp$DateNew[1]," to ",stockTemp$DateNew[n]),x="Date",y="logReturns")+
+  theme_classic()
+
+grid.arrange(a,b,c)
+
+
+
+
 
