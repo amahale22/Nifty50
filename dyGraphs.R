@@ -12,6 +12,8 @@ rownames(stockDyGraph) <- stockDyGraph[, 6]
 #Remove date column
 stockDyGraph <- stockDyGraph[, -6]
 head(stockDyGraph)
+
+#Visualise using dyGraphs
 #Plot stock data ensure date is in POSIXct format Plot only one variable
 dygraph(stockDyGraph, main = "Nifty") %>% dyRangeSelector()
 
@@ -33,9 +35,23 @@ dygraph(stockDyGraph, main = "Nifty Index") %>% dyRangeSelector() %>%
   dyAxis("y", label = "Index", drawGrid = F) %>%
   dyLegend(show = "always", hideOnMouseOut = TRUE) #or show = "follow"
 
-
-
-#%>% #Gives interactive points and highlighting
 #dyOptions(fillGraph = TRUE, fillAlpha = 0.4) #Gives effect pf area map by coloring all area beneath the lines
 #%>%
 # dyRoller(rollPeriod = 10)
+
+#Visualise using candlestick and xts pacakge (Plots 1st 4 columns as candles remaining are treated as lines)
+dygraph(stockDyGraph[,c(-5)]) %>%
+  dyCandlestick()
+
+
+
+
+
+
+
+
+
+
+
+
+
