@@ -40,13 +40,13 @@ dygraph(stockDyGraph, main = "Nifty Index") %>% dyRangeSelector() %>%
 # dyRoller(rollPeriod = 10)
 
 #Visualise using candlestick and xts pacakge (Plots 1st 4 columns as candles remaining are treated as lines)
-dygraph(stockDyGraph[,c(-5)]) %>%
-  dyCandlestick()
+dygraph(stockDyGraph[, c(-5)]) %>%
+  dyCandlestick() 
 
 
-
-
-
+#Add EMA 5 indicator using TTR package to dygraphs
+stockDyGraph$EMA5<-EMA(stockDyGraph$Close,n=5)
+stockDyGraph
 
 
 
