@@ -1,3 +1,4 @@
+#Data when imported from csv---Start
 # Read stock data from csv
 stock<-read.csv("July1Aug12018.csv",stringsAsFactors = F)
 head(stock)
@@ -6,8 +7,27 @@ str(stock)
 
 # Remove Turnover column and change date to Posixct format for ease
 stockTemp<-stock[,c(-7)]
-
 stockTemp$DateNew<-as.POSIXct(stockTemp$Date,format="%d-%b-%Y")
+#Data when imported from csv---End
+
+#Use quantmod to get NSE data (Check for NA and remove if all values are missing and market was actually closed on that date)
+startDate<-"2017-08-01"
+endDate<-"2018-08-20"
+getSymbols("^NSEI",from=startDate,to=endDate) #NIFTY50  INDIA
+getSymbols("^GSPC",from=startDate,to=endDate) #S&P500  United States
+getSymbols("^IXIC",from=startDate,to=endDate) #NASDAQ  United States
+getSymbols("^N225",from=startDate,to=endDate) #NIKKEI 225 -JAPAN
+getSymbols("^HSI",from=startDate,to=endDate) #HANGSENG -HONG KONG
+getSymbols("^FTSE",from=startDate,to=endDate) #Financial Times SE -LONDON 
+
+
+head(NSEI)
+head(GSPC)
+head(IXIC)
+head(N225)
+head(HSI)
+NSEI<-NSEI[complete.cases(NSEI),]
+
 
 
 # To derive new column of PrevClose and PrevOpen (Always 1st row of stock will have nothing to comapre so 0)
