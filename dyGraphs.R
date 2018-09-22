@@ -17,6 +17,7 @@ dygraph(NSEI, main = "Nifty") %>% dyRangeSelector()
 
 
 # Add one more Y axis to dygraph
+library(dygraphs)
 dygraph(NSEI, main = "Nifty Index") %>% dyRangeSelector() %>%
   dySeries("NSEI.Volume", axis = 'y2') %>% #Add one more Y axsis and line to show Share traded
   dyOptions(
