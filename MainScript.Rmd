@@ -10,8 +10,8 @@ library(quantmod)
 
 ```{r Download required indices}
 startDate<-"2017-08-01" 
-endDate<-"2018-09-19"
-getSymbols(c("^NSEI","^GSPC","^IXIC","^N225","^HSI","^FTSE","INR=X"),from=startDate,to=endDate)
+endDate<-"2018-07-31"
+getSymbols(c("^NSEI","^GSPC","^IXIC","^N225","^HSI","^FTSE","INR=X","GBPINR=X","JPYINR=X","GOLD","F*CL.NYM"),from=startDate,to=endDate)
 
 ```
 
@@ -21,17 +21,20 @@ x2<-merge(x1,IXIC,join="inner")
 x3<-merge(x2,N225,join="inner")
 x4<-merge(x3,HSI,join="inner")
 x5<-merge(x4,FTSE,join="inner")
-x6<-merge(x5,`INR=X`,join="inner")
+x6<-merge(x5,`INR=X`,join="left")
+x7<-merge(x6,`GBPINR=X`,join="left")
+x8<-merge(x7,`JPYINR=X`,join="left")
+x9<-merge(x8,GOLD,join="left")
+x10<-merge(x9,`F*CL.NYM`,join="left")
 
-
-head(x6)
-summary(x6)
-dim(x6)
+head(x10)
+summary(x10)
+dim(x10)
 
 ```
 
 ```{r Check for NAs in data and handle th same. Either approximate, Remove NAs (Use zoo function na.locf (Last observation carried forward method))}
-dim(x6[!complete.cases(x6),]) 
+dim(x10[!complete.cases(x10),]) 
 x7<-na.locf(x6)
 dim(x7[!complete.cases(x7),]) 
 head(x7)
@@ -47,15 +50,11 @@ x7$NSEI.LogReturn[1]<-0
 x7$NSEI.LogHLReturn<-log(x7$NSEI.High)-log(x7$NSEI.Low)
 ```
 
-```{r}
-log(x7$NSEI.Open[1:4])-log(x7$NSEI.Close[2:5])
-
-```
-
-
 ```{r Convert xts object to data frame}
-MasterData<-data.frame(date=index(x7), coredata(x7))
+MasterData<-data.frame(date=index(x11), coredata(x11))
 MasterData
+
+write.csv(MasterData, file = "MasterData.csv")
 
 ```
 
