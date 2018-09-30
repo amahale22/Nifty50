@@ -12,12 +12,13 @@ library(TTR)
 
 Basic CandleStickChart graph
 ```{r}
-candleChart(stockDyGraph,theme = "white")
+plot(x7)
+candleChart(NSEI,theme = "white")
 ```
 
 CandleStick chart using Chatseries
 ```{r}
-chartSeries(stockDyGraph,up.col = "green",dn.col = "red",theme = "white",name="NIFTY INDEX")
+chartSeries(NSEI,up.col = "green",dn.col = "red",theme = "white",name="NIFTY INDEX")
 ```
 
 Add indicator SMA/EMA to graph (Simple moving avg/Exponential moving avg)
@@ -25,7 +26,7 @@ EMA is more accurate compared to SMA since it gives more weightage to recent day
 SMA treats all prior days with same weightage 
 n=10,20,100 get previous 10,20,100 days average. Lesser the value of n more accurate is the line
 ```{r}
-chartSeries(stockDyGraph,up.col = "green",dn.col = "red",theme = "white",name="NIFTY INDEX")
+chartSeries(NSEI,up.col = "green",dn.col = "red",theme = "white",name="NIFTY INDEX")
 addSMA(n=5,col = "blue")
 addSMA(n=10,col="black")
 addEMA(n=5,col="green")
@@ -33,7 +34,7 @@ addEMA(n=5,col="green")
 
 Add ROC indicator 
 ```{r}
-chartSeries(stockDyGraph,up.col = "green",dn.col = "red",theme = "white",name="NIFTY INDEX")
+chartSeries(NSEI,up.col = "green",dn.col = "red",theme = "white",name="NIFTY INDEX")
 addROC(n=5)
 ```
 

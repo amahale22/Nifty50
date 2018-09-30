@@ -9,51 +9,79 @@ library(quantmod)
 ```
 
 ```{r Download required indices}
+#"^NSEI" #NIFTY50  INDIA
+#"^GSPC" #S&P500  United States
+#"^IXIC" #NASDAQ  United States
+#"^N225" #NIKKEI 225 -JAPAN
+#"^HSI"  #HANGSENG -HONG KONG
+#"^FTSE" #Financial Times SE -LONDON 
+#"INR=X" #USD/INR
 startDate<-"2017-08-01" 
 endDate<-"2018-07-31"
-getSymbols(c("^NSEI","^GSPC","^IXIC","^N225","^HSI","^FTSE","INR=X","GBPINR=X","JPYINR=X","GOLD","F*CL.NYM"),from=startDate,to=endDate)
+getSymbols(c("^NSEI","^GSPC","^IXIC","^N225","^HSI","^FTSE","INR=X","GBPINR=X","JPYINR=X","GOLD"),from=startDate,to=endDate)
 
 ```
 
 ```{r Merge all datasets}
-x1<-merge(NSEI,GSPC,join="inner")
-x2<-merge(x1,IXIC,join="inner")
-x3<-merge(x2,N225,join="inner")
-x4<-merge(x3,HSI,join="inner")
-x5<-merge(x4,FTSE,join="inner")
+x1<-merge(NSEI,GSPC,join="left")
+x2<-merge(x1,IXIC,join="left")
+x3<-merge(x2,N225,join="left")
+x4<-merge(x3,HSI,join="left")
+x5<-merge(x4,FTSE,join="left")
 x6<-merge(x5,`INR=X`,join="left")
 x7<-merge(x6,`GBPINR=X`,join="left")
 x8<-merge(x7,`JPYINR=X`,join="left")
 x9<-merge(x8,GOLD,join="left")
-x10<-merge(x9,`F*CL.NYM`,join="left")
+#x10<-merge(x9,`CL=F)`,join="left")
 
-head(x10)
-summary(x10)
-dim(x10)
+head(x9)
+summary(x9)
+dim(x9)
+
+#Abhishek EURINR=X use this tag for Euro to INR value. I havent added that to the Master data. Since I got it after creating master data.
+
 
 ```
 
 ```{r Check for NAs in data and handle th same. Either approximate, Remove NAs (Use zoo function na.locf (Last observation carried forward method))}
+dim(x9[!complete.cases(x9),]) 
+x10<-na.locf(x9)
 dim(x10[!complete.cases(x10),]) 
-x7<-na.locf(x6)
-dim(x7[!complete.cases(x7),]) 
-head(x7)
+head(x10)
+
+MasterData<-data.frame(date=index(x10), coredata(x10))
+head(MasterData)
+n=nrow(MasterData)
 
 ```
 
-```{r Derive log returens Close to previous close}
-x7$NSEI.LogReturn <- diff(log(x7$NSEI.Close), lag = 1)
-x7$NSEI.LogReturn[1]<-0
+
+#MARKET INDICES DERIVATION STARTS
+
+```{r Derive log returens toadys Close to previous close}
+MasterData$NSEI.LogPCTCReturn <- c(0,diff(log(MasterData$NSEI.Close), lag = 1))
 ```
 
-```{r Derive log returns for High to Low}
-x7$NSEI.LogHLReturn<-log(x7$NSEI.High)-log(x7$NSEI.Low)
+```{r Derive log returns for Todays High to Low}
+MasterData$NSEI.LogHLTReturn<-log(MasterData$NSEI.High)-log(MasterData$NSEI.Low)
 ```
 
-```{r Convert xts object to data frame}
-MasterData<-data.frame(date=index(x11), coredata(x11))
-MasterData
 
+```{r Derive log returns for Todays Open to Previous Close}
+MasterData$NSEI.LogTOPCReturn<-c(0,log(MasterData$NSEI.Open[2:n])-log(MasterData$NSEI.Close[1:n-1]))
+```
+
+#MARKET INDICES DERIVATION ENDS
+
+
+#CURRENCY INDICES DERIVATION STARTS
+```{r}
+MasterData$INR.X.LogPCTCReturn <- c(0,diff(log(MasterData$INR.X.Close), lag = 1))
+```
+#CURRENCY INDICES DERIVATION ENDS
+
+
+```{r Get csv file of master data}
 write.csv(MasterData, file = "MasterData.csv")
 
 ```
